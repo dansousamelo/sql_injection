@@ -26,13 +26,19 @@ conn = mysql.connector.connect(
 )
 
 @app.get("/reports")
-def get_reports(city: str = Query(None), recordID: str = Query(None)):
+def get_reports(
+    city: str = Query(None),
+    recordID: str = Query(None),
+    limit: int = Query(10),
+    offset: int = Query(0)
+):
     cursor = conn.cursor(dictionary=True)
     sql = "SELECT * FROM HomicideReport WHERE 1=1"
     if city:
-        sql += f" AND City = '{city}'"
+        sql += f" AND City = {city}"
     if recordID:
         sql += f" AND RecordID = {recordID}"
+    sql += f" LIMIT {limit} OFFSET {offset}"
     
     cursor.execute(sql)
     result = cursor.fetchall()

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from 'react-query'
 import { GenericPage } from '../../components/GenericPage'
 import * as S from './styles'
 import { api } from '../../lib/axios'
@@ -17,6 +18,13 @@ const searchSchema = z.object({
 })
 
 type SearchFormInputs = z.infer<typeof searchSchema>
+
+type Result = {
+  RecordID: string
+  City: string
+  State: string
+  Year: string
+}
 
 const ResultList = styled.ul`
   list-style: none;
@@ -53,28 +61,44 @@ export function HomePage() {
   } = useForm<SearchFormInputs>({
     resolver: zodResolver(searchSchema),
   })
-  const [results, setResults] = useState<any[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
 
-  const onSubmit: SubmitHandler<SearchFormInputs> = async (data) => {
-    setLoading(true)
-    try {
+  const [searchParams, setSearchParams] = useState<SearchFormInputs | null>(
+    null,
+  )
+  const [page, setPage] = useState(0)
+
+  const {
+    data: results = [],
+    isLoading,
+    error,
+  } = useQuery<Result[], Error>(
+    ['reports', searchParams, page],
+    async () => {
+      if (!searchParams) return []
       const params = new URLSearchParams()
-      if (data.city) params.append('city', data.city)
-      if (data.recordID) params.append('recordID', data.recordID)
+      if (searchParams.city) params.append('city', searchParams.city)
+      if (searchParams.recordID)
+        params.append('recordID', searchParams.recordID)
+      params.append('limit', '10')
+      params.append('offset', (page * 10).toString())
 
-      const response = await api.get(`/reports?${params.toString()}`)
-      setResults(response.data)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    } finally {
-      setLoading(false)
-    }
+      const response = await api.get<Result[]>(`/reports?${params.toString()}`)
+      return response.data
+    },
+    {
+      enabled: !!searchParams,
+      keepPreviousData: true,
+    },
+  )
+
+  const onSubmit: SubmitHandler<SearchFormInputs> = (data) => {
+    setPage(0)
+    setSearchParams(data)
   }
 
   return (
     <>
-      <GenericPage.Root hasNoScrollbar>
+      <GenericPage.Root>
         <S.Header>
           <S.WrapperLogoAndLogoTitle>
             <GenericPage.Logo />
@@ -98,10 +122,10 @@ export function HomePage() {
               render={({ field }) => (
                 <InputField
                   label="City"
-                  name="city"
                   control={control}
                   placeholder="Enter city"
                   type="text"
+                  {...field}
                 />
               )}
             />
@@ -111,10 +135,10 @@ export function HomePage() {
               render={({ field }) => (
                 <InputField
                   label="Record ID"
-                  name="recordID"
                   control={control}
                   placeholder="Enter record ID"
                   type="text"
+                  {...field}
                 />
               )}
             />
@@ -129,30 +153,54 @@ export function HomePage() {
         </S.MainContent>
         <S.MainContent>
           <h2>Resultados:</h2>
-          {loading ? (
+          {isLoading ? (
             <>
               <LoadingSkeleton />
               <LoadingSkeleton />
               <LoadingSkeleton />
             </>
           ) : results.length > 0 ? (
-            <ResultList>
-              {results.map((result, index) => (
-                <ResultItem key={index}>
-                  <div>
-                    <strong>Record ID:</strong> {result.RecordID}
-                    <br />
-                    <strong>City:</strong> {result.City}
-                    <br />
-                    <strong>State:</strong> {result.State}
-                    <br />
-                    <strong>Year:</strong> {result.Year}
-                  </div>
-                </ResultItem>
-              ))}
-            </ResultList>
+            <>
+              <ResultList>
+                {results.map((result, index) => (
+                  <ResultItem key={index}>
+                    <div>
+                      <strong>Record ID:</strong> {result.RecordID}
+                      <br />
+                      <strong>City:</strong> {result.City}
+                      <br />
+                      <strong>State:</strong> {result.State}
+                      <br />
+                      <strong>Year:</strong> {result.Year}
+                    </div>
+                  </ResultItem>
+                ))}
+              </ResultList>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  margin: '16px 0 ',
+                  marginBottom: '2rem',
+                }}
+              >
+                <PrimaryButton
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  disabled={page === 0}
+                >
+                  Anterior
+                </PrimaryButton>
+
+                <PrimaryButton
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disabled={results.length < 10}
+                >
+                  Próximo
+                </PrimaryButton>
+              </div>
+            </>
           ) : (
-            <NoResults>No results found</NoResults>
+            <NoResults>Não foram encontrados resultados.</NoResults>
           )}
         </S.MainContent>
       </GenericPage.Root>
