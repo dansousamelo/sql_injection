@@ -1,5 +1,5 @@
 
-# Guia Teórico sobre SQL Injection
+# SQL Injection
 
 **Autor:** Daniel de Sousa Oliveira Melo Veras  
 **Data de Criação:** 08/06/2024
@@ -8,7 +8,18 @@
 
 ## Introdução
 
-SQL Injection é uma das vulnerabilidades mais perigosas e comuns em aplicações web. Este guia explora a teoria por trás do SQL Injection, seus impactos e como mitigá-lo de forma eficaz. Este projeto trata-se de uma simulação de como realizar sql injection para fins didáticos.
+<p><strong><em>SQL Injection</em></strong> é uma das vulnerabilidades mais perigosas e comuns em aplicações web. Este projeto trata-se de uma simulação de como funciona a técnica de sql injection para fins didáticos, abaixo temos uma imagem de como ficou o client-side da aplicação.</p>
+
+<div style="display: flex; flex-direction: column; justify-content: center; align-items:center;">
+     <img src="https://github.com/dansousamelo/sql_injection/assets/48137972/9fc7b340-2e93-4b2a-9afc-a460e07aa9f2" alt="Imagem da aplicação de simulação de sql injection" style="display: block; margin: 0 auto;">
+</div>
+
+
+
+
+
+
+
 
 ## O que é SQL Injection?
 
