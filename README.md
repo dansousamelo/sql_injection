@@ -1,5 +1,5 @@
 
-# Guia Teórico sobre SQL Injection
+# SQL Injection
 
 **Autor:** Daniel de Sousa Oliveira Melo Veras  
 **Data de Criação:** 08/06/2024
