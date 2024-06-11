@@ -150,6 +150,7 @@ client
 node_modules
 database
 │   Fisico_DanielVeras.sql
+│   Popula_DanielVeras.md
 │   SQLInjection.sql
 server
 │   .env
