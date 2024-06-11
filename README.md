@@ -8,7 +8,7 @@
 
 ## Introdução
 
-SQL Injection é uma das vulnerabilidades mais perigosas e comuns em aplicações web. Este guia explora a teoria por trás do SQL Injection, seus impactos e como mitigá-lo de forma eficaz.
+SQL Injection é uma das vulnerabilidades mais perigosas e comuns em aplicações web. Este guia explora a teoria por trás do SQL Injection, seus impactos e como mitigá-lo de forma eficaz. Este projeto trata-se de uma simulação de como realizar sql injection para fins didáticos.
 
 ## O que é SQL Injection?
 
@@ -132,10 +132,110 @@ Restringir permissões de usuários no banco de dados, garantindo o princípio d
 
 O projeto está organizado da seguinte maneira:
 
-- **Fisico_DanielVeras.sql**: Script SQL para a criação das tabelas do banco de dados.
-- **Popula_DanielVeras.sql**: Script SQL para popular o banco de dados com dados de exemplo.
-- **README.md**: Documento que fornece uma visão geral sobre SQL Injection, exemplos teóricos, consequências e métodos de prevenção.
-- **SQLInjection.sql**: Script SQL com exemplos de consultas vulneráveis a SQL Injection para fins de demonstração e ensino.
+```bash
+client
+│   .eslintrc.json
+│   .gitignore
+│   index.html
+│   jest.config.ts
+│   package-lock.json
+│   package.json
+│   server.json
+│   setupTests.ts
+│   tsconfig.json
+│   tsconfig.node.json
+│   vercel.json
+│   vite.config.ts
+└───src
+node_modules
+database
+│   Fisico_DanielVeras.sql
+│   SQLInjection.sql
+server
+│   .env
+│   main.py
+│   package-lock.json
+│   package.json
+└───__pycache__
+README.md
+```
+
+## Configuração do Ambiente
+
+### Variáveis de Ambiente
+
+Crie um arquivo `.env` no diretório `server` com o seguinte conteúdo:
+
+```
+DB_HOST=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=HomicideDB
+```
+
+### Instalação
+
+Siga os passos abaixo para configurar o projeto:
+
+1. Clone o repositório:
+
+    ```bash
+    git clone <URL do repositório>
+    ```
+
+2. Instale as dependências do cliente:
+
+    ```bash
+    cd client
+    npm install --legacy-peer-deps
+    ```
+
+3. Instale as dependências do servidor:
+
+    ```bash
+    cd server
+    pip install -r requirements.txt
+    ```
+
+### Executando o Projeto
+
+1. Inicie o servidor:
+
+    ```bash
+    cd server
+    uvicorn main:app --reload
+    ```
+
+2. Inicie o cliente:
+
+    ```bash
+    cd client
+    npm run dev
+    ```
+
+### Endpoints
+
+#### GET /reports
+
+Retorna relatórios de homicídios com base nos parâmetros fornecidos.
+
+- **Parâmetros de Consulta:**
+  - `city` (opcional): Filtra relatórios por cidade.
+  - `recordID` (opcional): Filtra relatórios pelo ID do registro.
+
+### Exemplo de Uso
+
+Para obter relatórios de homicídios por cidade:
+
+```bash
+curl -X GET "http://localhost:8000/reports?city=Columbia"
+```
+
+Para obter relatórios de homicídios por ID de registro:
+
+```bash
+curl -X GET "http://localhost:8000/reports?recordID=2"
+```
 
 ## Conclusão
 

